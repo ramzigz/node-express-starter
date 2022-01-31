@@ -1,0 +1,238 @@
+{
+  "openapi": "3.0.0",
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "",
+      "variables": {}
+    }
+  ],
+  "info": {
+    "version": "43bb0c31-813a-45a6-898c-dfc8ed81b2d5",
+    "title": "project_name",
+    "description": "",
+    "termsOfService": "",
+    "contact": {},
+    "license": {
+      "name": ""
+    }
+  },
+  "paths": {
+    "/login": {
+      "post": {
+        "tags": [
+          "Login"
+        ],
+        "summary": "Login",
+        "description": "",
+        "operationId": "Login",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "email",
+            "in": "body",
+            "description": "User email",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "in": "body",
+            "description": "User password",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "petstore_auth": [
+              "write:pets",
+              "read:pets"
+            ]
+          }
+        ]
+      }
+    },
+    "/users": {
+      "get": {
+        "summary": "Get all",
+        "operationId": "Getall",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/users/60deeb780b4d0b3e03aa674e": {
+      "get": {
+        "summary": "Get one",
+        "operationId": "Getone",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/users/profile": {
+      "get": {
+        "summary": "Get my profile",
+        "operationId": "Getmyprofile",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/users/602ffa3c3308a62d7a3621bc": {
+      "delete": {
+        "summary": "Delete  one",
+        "operationId": "Deleteone",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/users/60a8e1abf72887341ac7b3fb": {
+      "patch": {
+        "summary": "Update profile",
+        "operationId": "Updateprofile",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/users/password": {
+      "patch": {
+        "summary": "Update password",
+        "operationId": "Updatepassword",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "password",
+                  "confirmPassword"
+                ],
+                "properties": {
+                  "password": {
+                    "type": "string",
+                    "example": "genext++"
+                  },
+                  "confirmPassword": {
+                    "type": "string",
+                    "example": "genext++"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "noauth": {
+        "type": "http",
+        "scheme": "noauth"
+      },
+      "bearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  },
+  "security": [
+    {
+      "noauth": []
+    },
+    {
+      "bearer": []
+    },
+    {
+      "bearer": []
+    },
+    {
+      "bearer": []
+    },
+    {
+      "noauth": []
+    },
+    {
+      "bearer": []
+    },
+    {
+      "noauth": []
+    }
+  ],
+  "tags": [],
+  "externalDocs": {
+    "url": "",
+    "description": ""
+  },
+  "warnings": [
+    "Two GET or two POST methods for the same path are not allowed in OpenAPI specification : patch{{url}}/users/60a8e1abf72887341ac7b3fb"
+  ]
+}
