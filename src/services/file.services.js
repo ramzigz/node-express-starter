@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import File from '../models/File';
+import File from '../models/File.js';
 
 const addressService = {
 

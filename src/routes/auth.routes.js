@@ -1,13 +1,13 @@
 import express from 'express';
 import { validate } from 'express-validation';
-import * as authValidation from '../validations/auth.validation';
-import authMiddleware from '../middlewares/auth.middleware';
+import authValidation from '../validations/auth.validation.js';
+import authMiddleware from '../middlewares/auth.middleware.js';
 
-import authController from '../controllers/auth';
+import authController from '../controllers/auth/index.js';
 
 const routes = express.Router();
 
-routes.post('/login', validate(authValidation.login, { keyByField: true }, { abortEarly: false }), authController.login);
+routes.post('/login', validate(authValidation.login, { keyByField: true }, { abortEarly: false }), authController.signin);
 routes.post('/login/google', authController.loginGoogle);
 routes.post('/login/facebook', authController.loginFacebook);
 routes.post('/login/apple', authController.loginApple);
@@ -20,6 +20,6 @@ routes.post('/reset-password', authController.resetPassword);
 routes.post('/verify-email/send', authMiddleware.isAuthenticated, authController.sendVerificationEmail);
 routes.post('/verify-email', authMiddleware.isAuthenticated, authController.verifyEmail);
 
-routes.get('/logout', authMiddleware.isAuthenticated, authController.logout);
+routes.get('/logout', authMiddleware.isAuthenticated, authController.logoutUser);
 
-module.exports = routes;
+export default routes;

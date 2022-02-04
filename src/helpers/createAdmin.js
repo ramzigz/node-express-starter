@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
-import User from '../models/User';
-import log4j from '../config/configLog4js';
+import User from '../models/User.js';
+import log4j from '../config/configLog4js.js';
 
 export default async function createAdmin() {
   try {

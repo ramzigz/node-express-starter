@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
-import sendMail from '../../utils/sendEmail';
-import verifyEmailTemplate from '../../utils/verifyEmailTemplate';
+import sendMail from '../../utils/sendEmail.js';
+import verifyEmailTemplate from '../../utils/verifyEmailTemplate.js';
 
 export async function sendVerificationEmail({
   req, res, next, usersService, ErrorHandler, responseHandler,

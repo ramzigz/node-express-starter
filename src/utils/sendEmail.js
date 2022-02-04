@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import configLog4js from '../config/configLog4js';
+import configLog4js from '../config/configLog4js.js';
 
 // async..await is not allowed in global scope, must use a wrapper
 const sendMail = (settings) => {

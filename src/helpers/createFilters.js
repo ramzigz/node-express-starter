@@ -1,6 +1,6 @@
 import moment from 'moment';
-import addressService from '../services/address.services';
-import { isAdmin } from './checkAuth';
+import addressService from '../services/address.services.js';
+import { isAdmin } from './checkAuth.js';
 
 async function addAddressFilters(filters) {
   const { data: { addresses } } = await addressService.getAll({

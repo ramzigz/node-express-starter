@@ -2,30 +2,27 @@ import passport from 'passport';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import appleSigninAuth from 'apple-signin-auth';
-import httpStatusCodes from '../../utils/httpStatusCodes';
-import {
-  login, loginGoogle, loginFacebook, loginApple,
-} from './login.controller';
-import logout from './logout.controller';
-import { forgotPassword, resetPassword, verifyCode } from './reset-password.controller';
-import { ErrorHandler } from '../../utils/errorsHandler';
-import responseHandler from '../../utils/responseHandler';
-import signup from './signup.controller';
-import usersService from '../../services/users.services';
-import addressService from '../../services/address.services';
-import { sendVerificationEmail, verifyEmail } from './email-verification.controller';
-import generateCode from '../../utils/codeGenerator';
+import httpStatusCodes from '../../utils/httpStatusCodes.js';
+import * as login from './login.controller.js';
+import logout from './logout.controller.js';
+import * as reserPasswordController from './reset-password.controller.js';
+import { ErrorHandler } from '../../utils/errorsHandler.js';
+import responseHandler from '../../utils/responseHandler.js';
+import signupUser from './signup.controller.js';
+import usersService from '../../services/users.services.js';
+import addressService from '../../services/address.services.js';
+import * as emailVerificationController from './email-verification.controller.js';
+import generateCode from '../../utils/codeGenerator.js';
 
-const { OAuth2Client } = require('google-auth-library');
+import * as OAuth2Client from 'google-auth-library';
 
-const { promisify } = require('util');
+import  util from 'util';
 
-const randomBytesAsync = promisify(crypto.randomBytes);
+const randomBytesAsync = util.promisify(crypto.randomBytes);
 
-exports.login = (req, res, next) => {
+const signin = (req, res, next) => {
   const secret = process.env.TOKEN_SECRET;
-
-  login({
+  login.login({
     req,
     res,
     next,
@@ -39,10 +36,10 @@ exports.login = (req, res, next) => {
   });
 };
 
-exports.loginGoogle = (req, res, next) => {
+const loginGoogle = (req, res, next) => {
   const secret = process.env.TOKEN_SECRET;
 
-  loginGoogle({
+  login.loginGoogle({
     req,
     res,
     next,
@@ -57,10 +54,10 @@ exports.loginGoogle = (req, res, next) => {
   });
 };
 
-exports.loginFacebook = (req, res, next) => {
+const loginFacebook = (req, res, next) => {
   const secret = process.env.TOKEN_SECRET;
 
-  loginFacebook({
+  login.loginFacebook({
     req,
     res,
     next,
@@ -73,10 +70,11 @@ exports.loginFacebook = (req, res, next) => {
     secret,
   });
 };
-exports.loginApple = (req, res, next) => {
+
+const loginApple = (req, res, next) => {
   const secret = process.env.TOKEN_SECRET;
 
-  loginApple({
+  login.loginApple({
     req,
     res,
     next,
@@ -92,9 +90,9 @@ exports.loginApple = (req, res, next) => {
   });
 };
 
-exports.signup = (req, res, next) => {
+const signup = (req, res, next) => {
   const secret = process.env.TOKEN_SECRET;
-  signup({
+  signupUser({
     req,
     res,
     next,
@@ -108,14 +106,14 @@ exports.signup = (req, res, next) => {
   });
 };
 
-exports.logout = (req, res) => {
+const logoutUser = (req, res) => {
   logout({
     req, res, httpStatusCodes, responseHandler, usersService,
   });
 };
 
-exports.forgotPassword = (req, res, next) => {
-  forgotPassword({
+const forgotPassword = (req, res, next) => {
+  reserPasswordController.forgotPassword({
     req,
     res,
     next,
@@ -128,21 +126,21 @@ exports.forgotPassword = (req, res, next) => {
   });
 };
 
-exports.verifyCode = (req, res, next) => {
-  verifyCode({
+const verifyCode = (req, res, next) => {
+  reserPasswordController.verifyCode({
     req, res, next, usersService, ErrorHandler, responseHandler, httpStatusCodes,
   });
 };
 
-exports.resetPassword = (req, res, next) => {
-  resetPassword({
+const resetPassword = (req, res, next) => {
+  reserPasswordController.resetPassword({
     req, res, next, usersService, ErrorHandler, responseHandler, httpStatusCodes, randomBytesAsync,
   });
 };
 
 // EMAIL VERFIFICATION
-exports.sendVerificationEmail = (req, res, next) => {
-  sendVerificationEmail({
+const sendVerificationEmail = (req, res, next) => {
+  emailVerificationController.sendVerificationEmail({
     req,
     res,
     next,
@@ -154,8 +152,9 @@ exports.sendVerificationEmail = (req, res, next) => {
     randomBytesAsync,
   });
 };
-exports.verifyEmail = (req, res, next) => {
-  verifyEmail({
+
+const verifyEmail = (req, res, next) => {
+  emailVerificationController.verifyEmail({
     req,
     res,
     next,
@@ -167,3 +166,17 @@ exports.verifyEmail = (req, res, next) => {
     randomBytesAsync,
   });
 };
+
+export default {
+  signin,
+  loginApple,
+  loginFacebook,
+  signup,
+  verifyCode,
+  resetPassword,
+  verifyEmail,
+  sendVerificationEmail,
+  loginGoogle,
+  forgotPassword,
+  logoutUser,
+}

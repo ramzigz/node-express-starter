@@ -2,9 +2,9 @@
 import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
 import moment from 'moment';
-import { ErrorHandler } from '../utils/errorsHandler';
-import httpStatusCodes from '../utils/httpStatusCodes';
-import usersService from '../services/users.services';
+import { ErrorHandler } from '../utils/errorsHandler.js';
+import httpStatusCodes from '../utils/httpStatusCodes.js';
+import usersService from '../services/users.services.js';
 
 const authMiddleware = {
   /**

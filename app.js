@@ -15,35 +15,32 @@ import mongoose from 'mongoose';
 import passport from 'passport';
 import fs from 'fs';
 import log4js from 'log4js';
-import swaggerUi from 'swagger-ui-express';
 import cors from 'cors';
 import session from 'express-session';
 import { exec } from 'child_process';
 import chalk from 'chalk';
-// import log4j from './src/config/configLog4js';
+import log4j from './src/config/configLog4js.js';
+import { handleError } from './src/utils/errorsHandler.js';
+import initPassportport from './src/config/passport.js';
 
-import { version } from './package.json';
-
-// import { handleError } from './src/utils/errorsHandler.js';
-// import initPassportport from './src/config/passport';
-/**
-  * Controllers (route handlers).
-  */
 /**
   * Routes
   */
-import appRoutes from './src/routes/index';
-import createAdmin from './src/helpers/createAdmin';
+import appRoutes from './src/routes/index.js';
+import createAdmin from './src/helpers/createAdmin.js';
 
-import swaggerDocument from './docs/api_swagger.json';
-
-const MongoStore = require('connect-mongo');
+import MongoStore from 'connect-mongo';
 
 /**
   * Load environment variables from .env file, where API keys and passwords are configured.
   */
 dotenv.config({ path: '.env' });
 
+
+import {fileURLToPath} from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 /**
   * Create Express server.
   */
@@ -55,10 +52,6 @@ app.use(cors({ origin: true, credentials: true }));
   * Connect to MongoDB.
   */
 
-mongoose.set('useFindAndModify', false);
-mongoose.set('useCreateIndex', true);
-mongoose.set('useNewUrlParser', true);
-mongoose.set('useUnifiedTopology', true);
 mongoose.connect(process.env.MONGODB_URI);
 
 mongoose.connection.on('error', () => {
@@ -90,9 +83,9 @@ app.use(session({
     mongoUrl: process.env.MONGODB_URI,
   }),
 }));
-// app.use(log4js.connectLogger(log4j.loggercheese, { level: 'info' }));
-// app.use(passport.initialize());
-// app.use(passport.session());
+app.use(log4js.connectLogger(log4j.loggercheese, { level: 'info' }));
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(flash());
 
 /**
@@ -108,19 +101,22 @@ app.use((req, res, next) => {
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads'), { maxAge: 31557600000 }));
 app.use('/assets', express.static(path.join(__dirname, 'assets'), { maxAge: 31557600000 }));
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 // app.get('/api-docs', (req, res, next) => {
 //   res.redirect('https://documenter.getpostman.com/view/9111678/TzzAMbpu#1d673dc3-11d6-40e9-84df-b272ef752fdb');
 // });
 
-/**
-  * Primary app routes.
-  */
+
 
 createAdmin();
 
-// initPassportport();
 
+/**
+  * Iniate passpro.
+  */
+initPassportport();
+/**
+  * App routes.
+  */
 app.use('/users', appRoutes.usersRoutes);
 app.use('/', appRoutes.authRoutes);
 
@@ -134,7 +130,6 @@ app.get('/', (req, res, next) => {
   res.status(200).json({
     msg: 'project_name API',
     port: process.env.PORT || 5000,
-    version,
     lastBuildDate,
   });
 });
@@ -144,7 +139,7 @@ app.get('/', (req, res, next) => {
 
 app.use((err, req, res, next) => {
   console.log('er========+>', err, next);
-  // handleError(err, res);
+  handleError(err, res);
 });
 
 /**
@@ -152,15 +147,13 @@ app.use((err, req, res, next) => {
   */
 
 app.listen(app.get('port'), () => {
-  // log4j.loggerinfo.info(
-  //   '%s App is running at http://localhost:%d in %s mode, version: %s',
-  //   chalk.green('✓'),
-  //   app.get('port'),
-  //   app.get('env'),
-  //   version,
-  // );
-  // log4j.loggerinfo.info('  Press CTRL-C to stop\n');
-  console.info('  Press CTRL-C to stop\n');
+  log4j.loggerinfo.info(
+    '%s App is running at http://localhost:%d in %s mode',
+    chalk.green('✓'),
+    app.get('port'),
+    app.get('env'),
+  );
+  log4j.loggerinfo.info('  Press CTRL-C to stop\n');
 });
 
 export default app;

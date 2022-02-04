@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import User from '../models/User';
+import User from '../models/User.js';
 
 const usersService = {
   async create({

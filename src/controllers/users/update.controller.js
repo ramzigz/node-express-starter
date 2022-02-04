@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
-import filesService from '../../services/file.services';
-import deleteFile from '../../utils/deleteFile';
+import filesService from '../../services/file.services.js';
+import deleteFile from '../../utils/deleteFile.js';
 
 async function createFileAndReturnId(
   {

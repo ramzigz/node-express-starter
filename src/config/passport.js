@@ -2,8 +2,8 @@
 import passport from 'passport';
 import LocalStrategy from 'passport-local';
 
-import User from '../models/User';
-import usersService from '../services/users.services';
+import User from '../models/User.js';
+import usersService from '../services/users.services.js';
 
 export default function initPassport() {
   passport.serializeUser((user, done) => {

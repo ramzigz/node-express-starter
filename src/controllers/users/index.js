@@ -1,18 +1,18 @@
-import { ErrorHandler } from '../../utils/errorsHandler';
-import httpStatusCodes from '../../utils/httpStatusCodes';
-import responseHandler from '../../utils/responseHandler';
-import usersService from '../../services/users.services';
-import addressService from '../../services/address.services';
-import filesService from '../../services/file.services';
+import { ErrorHandler } from '../../utils/errorsHandler.js';
+import httpStatusCodes from '../../utils/httpStatusCodes.js';
+import responseHandler from '../../utils/responseHandler.js';
+import usersService from '../../services/users.services.js';
+import addressService from '../../services/address.services.js';
+import filesService from '../../services/file.services.js';
 
-import get from './get.controller';
-import { isAdmin } from '../../helpers/checkAuth';
-import createFilters from '../../helpers/createFilters';
-import { update, updatePassword } from './update.controller';
-import deleteUser from './delete.controller';
-import deleteFile from '../../utils/deleteFile';
+import get from './get.controller.js';
+import { isAdmin } from '../../helpers/checkAuth.js';
+import createFilters from '../../helpers/createFilters.js';
+import { update, updatePassword } from './update.controller.js';
+import deleteUsr from './delete.controller.js';
+import deleteFile from '../../utils/deleteFile.js';
 
-exports.getAll = (req, res, next) => {
+const getAll = (req, res, next) => {
   get.all({
     req,
     res,
@@ -25,19 +25,19 @@ exports.getAll = (req, res, next) => {
   });
 };
 
-exports.getOne = (req, res, next) => {
+const getOne = (req, res, next) => {
   get.one({
     req, res, next, ErrorHandler, httpStatusCodes, responseHandler, usersService,
   });
 };
 
-exports.getMyProfile = (req, res, next) => {
+const getMyProfile = (req, res, next) => {
   get.myProfile({
     req, res, next, ErrorHandler, httpStatusCodes, responseHandler, usersService,
   });
 };
 
-exports.getUsersStats = (req, res, next) => {
+const getUsersStats = (req, res, next) => {
   get.stats({
     req,
     res,
@@ -50,7 +50,7 @@ exports.getUsersStats = (req, res, next) => {
   });
 };
 
-exports.update = (req, res, next) => {
+const updateUser = (req, res, next) => {
   update({
     req,
     res,
@@ -65,7 +65,7 @@ exports.update = (req, res, next) => {
     deleteFile,
   });
 };
-exports.updatePassword = (req, res, next) => {
+const updateUserPassword = (req, res, next) => {
   updatePassword({
     req,
     res,
@@ -79,8 +79,8 @@ exports.updatePassword = (req, res, next) => {
   });
 };
 
-exports.delete = (req, res, next) => {
-  deleteUser({
+const deleteUser = (req, res, next) => {
+  deleteUsr({
     req,
     res,
     next,
@@ -93,3 +93,12 @@ exports.delete = (req, res, next) => {
     deleteFile,
   });
 };
+
+export {
+  deleteUser,
+  updateUserPassword,
+  updateUser,
+  getUsersStats,
+  getMyProfile,
+  getOne,getAll
+}

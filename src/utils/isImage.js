@@ -1,6 +1,3 @@
-import { ErrorHandler } from './errorsHandler';
-import httpStatusCodes from './httpStatusCodes';
-
 const imageFilter = (req, file, next) => {
   const allowedMimeTypes = ['image/png', 'image/jpeg'];
 

@@ -2,13 +2,13 @@ import express from 'express';
 import { validate } from 'express-validation';
 import fs from 'fs';
 import mime from 'mime';
-import userController from '../controllers/users';
-import authMiddleware from '../middlewares/auth.middleware';
-import limits from '../utils/fileValidation';
-import * as usersValidation from '../validations/users.validation';
+import * as userController from '../controllers/users/index.js';
+import authMiddleware from '../middlewares/auth.middleware.js';
+import limits from '../utils/fileValidation.js';
+import  usersValidation from '../validations/users.validation.js';
 
-const multer = require('multer');
-const { default: imageFilter } = require('../utils/isImage');
+import multer from 'multer';
+import * as imageFilter from '../utils/isImage.js';
 
 const storage = multer.diskStorage({
   destination(req, file, cb) {
@@ -39,7 +39,7 @@ routes.route('/profile')
       { name: 'drivingLicenceSide2', maxCount: 1 },
     ]),
     validate(usersValidation.updateUser, { keyByField: true }, { abortEarly: false }),
-    userController.update,
+    userController.updateUser,
   )
   .get(authMiddleware.isAuthenticated, userController.getMyProfile);
 
@@ -52,7 +52,7 @@ routes.route('/password')
   .patch(
     authMiddleware.isAuthenticated,
     validate(usersValidation.updatePassword, { keyByField: true }, { abortEarly: false }),
-    userController.updatePassword,
+    userController.updateUserPassword,
   );
 
 routes.route('/:id')
@@ -68,8 +68,7 @@ routes.route('/:id')
       { name: 'drivingLicenceSide2', maxCount: 1 },
     ]),
     validate(usersValidation.updateUserAsAdmin, { keyByField: true }, { abortEarly: false }),
-    userController.update,
+    userController.updateUser,
   )
-  .delete(authMiddleware.isAuthorized, userController.delete);
-
-module.exports = routes;
+  .delete(authMiddleware.isAuthorized, userController.deleteUser);
+export default routes;

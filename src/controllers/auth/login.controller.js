@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 import moment from 'moment';
-import getFacebookUserData from '../../helpers/facebookAuth';
-import authMiddleware from '../../middlewares/auth.middleware';
+import getFacebookUserData from '../../helpers/facebookAuth.js';
+import authMiddleware from '../../middlewares/auth.middleware.js';
 
 /* eslint-disable no-underscore-dangle */
 export async function login({

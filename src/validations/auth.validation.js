@@ -3,7 +3,7 @@ import JoiImport from 'joi';
 
 const Joi = JoiImport.extend(DateExtension);
 
-module.exports = {
+export default{
   // POST /signup
   signup: {
     body: Joi.object({
