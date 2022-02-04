@@ -20,21 +20,35 @@ export default function initPassport() {
  * Sign in using Email and Password.
  */
 
-  passport.use(new LocalStrategy({ usernameField: 'email' }, async (email, password, done) => {
-    const user = await usersService.getOne({ email: email.toLowerCase() });
+  passport.use(new LocalStrategy(
+    { usernameField: 'email' },
+    async (email, password, done) => {
+      const user = await usersService.getOne({ email: email.toLowerCase() });
 
-    if (!user) { return done(null, false, { msg: 'Invalid email or password.' }); }
+      if (!user) { return done(null, false, { msg: 'Invalid email or password.' }); }
 
-    if (!user.isActive) { return done(null, false, { msg: 'User is deactivated by administration' }); }
+      if (!user.isActive) {
+        return done(null, false, { msg: 'User is deactivated by administration' });
+      }
 
-    if (!user.password) { return done(null, false, { msg: 'Your account was registered using a sign-in provider. To enable password login, sign in using a provider, and then set a password under your user profile.' }); }
+      if (!user.password) {
+        return done(
+          null,
+          false,
+          { msg: `Your account was registered using a sign-in provider.
+           To enable password login, sign in using a provider,
+            and then set a password under your user profile.
+           ` }
+        );
+      }
 
-    return user.comparePassword(password, (err, isMatch) => {
-      if (err) return done(err);
+      return user.comparePassword(password, (err, isMatch) => {
+        if (err) return done(err);
 
-      if (isMatch) { return done(null, user); }
+        if (isMatch) { return done(null, user); }
 
-      return done(null, false, { msg: 'Invalid email or password.' });
-    });
-  }));
+        return done(null, false, { msg: 'Invalid email or password.' });
+      });
+    }
+  ));
 }

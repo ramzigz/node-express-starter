@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-console */
 /**
@@ -19,6 +20,8 @@ import cors from 'cors';
 import session from 'express-session';
 import { exec } from 'child_process';
 import chalk from 'chalk';
+import MongoStore from 'connect-mongo';
+import { fileURLToPath } from 'url';
 import log4j from './src/config/configLog4js.js';
 import { handleError } from './src/utils/errorsHandler.js';
 import initPassportport from './src/config/passport.js';
@@ -29,15 +32,10 @@ import initPassportport from './src/config/passport.js';
 import appRoutes from './src/routes/index.js';
 import createAdmin from './src/helpers/createAdmin.js';
 
-import MongoStore from 'connect-mongo';
-
 /**
-  * Load environment variables from .env file, where API keys and passwords are configured.
+  * Load environment variables from .env file,
   */
 dotenv.config({ path: '.env' });
-
-
-import {fileURLToPath} from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -55,8 +53,11 @@ app.use(cors({ origin: true, credentials: true }));
 mongoose.connect(process.env.MONGODB_URI);
 
 mongoose.connection.on('error', () => {
-  // log4j.loggerinfo.error('%s MongoDB connection error. Please make sure MongoDB is running.', chalk.red('✗'));
-  console.error('%s MongoDB connection error. Please make sure MongoDB is running.', chalk.red('✗'));
+  log4j.loggerinfo.error(
+    `%s MongoDB connection error.
+   Please make sure MongoDB is running.`,
+    chalk.red('✗')
+  );
   process.exit();
 });
 
@@ -99,16 +100,22 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/uploads', express.static(path.join(__dirname, 'uploads'), { maxAge: 31557600000 }));
-app.use('/assets', express.static(path.join(__dirname, 'assets'), { maxAge: 31557600000 }));
-// app.get('/api-docs', (req, res, next) => {
-//   res.redirect('https://documenter.getpostman.com/view/9111678/TzzAMbpu#1d673dc3-11d6-40e9-84df-b272ef752fdb');
-// });
-
-
+app.use(
+  '/uploads',
+  express.static(
+    path.join(__dirname, 'uploads'),
+    { maxAge: 31557600000 }
+  )
+);
+app.use(
+  '/assets',
+  express.static(
+    path.join(__dirname, 'assets'),
+    { maxAge: 31557600000 }
+  )
+);
 
 createAdmin();
-
 
 /**
   * Iniate passpro.

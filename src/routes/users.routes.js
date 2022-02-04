@@ -2,12 +2,12 @@ import express from 'express';
 import { validate } from 'express-validation';
 import fs from 'fs';
 import mime from 'mime';
+import multer from 'multer';
 import * as userController from '../controllers/users/index.js';
 import authMiddleware from '../middlewares/auth.middleware.js';
 import limits from '../utils/fileValidation.js';
-import  usersValidation from '../validations/users.validation.js';
+import usersValidation from '../validations/users.validation.js';
 
-import multer from 'multer';
 import * as imageFilter from '../utils/isImage.js';
 
 const storage = multer.diskStorage({
@@ -18,13 +18,14 @@ const storage = multer.diskStorage({
   filename(req, file, cb) {
     cb(
       null,
-      `${Date.now()}.${mime.getExtension(file.mimetype === 'image/jpg' ? 'image/jpeg' : file.mimetype)}`,
+      `${Date.now()}.${mime.getExtension(
+        file.mimetype === 'image/jpg' ? 'image/jpeg' : file.mimetype
+      )}`,
     ); // Appending extension
   },
 });
 
 const uploadMany = multer({ storage, fileFilter: imageFilter, limits });
-
 const routes = express.Router();
 
 routes.route('/profile')
@@ -67,7 +68,11 @@ routes.route('/:id')
       { name: 'drivingLicenceSide1', maxCount: 1 },
       { name: 'drivingLicenceSide2', maxCount: 1 },
     ]),
-    validate(usersValidation.updateUserAsAdmin, { keyByField: true }, { abortEarly: false }),
+    validate(
+      usersValidation.updateUserAsAdmin,
+      { keyByField: true },
+      { abortEarly: false }
+    ),
     userController.updateUser,
   )
   .delete(authMiddleware.isAuthorized, userController.deleteUser);

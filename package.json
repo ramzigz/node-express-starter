@@ -5,7 +5,7 @@
   "license": "MIT",
   "author": "Ramzi-Gz",
   "main": "app.js",
-  "type": "module", 
+  "type": "module",
   "scripts": {
     "build": "babel app.js --out-file app.js && babel src --out-dir src",
     "lint": "eslint source/ --quiet",
