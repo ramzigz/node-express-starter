@@ -1,4 +1,4 @@
-project_name
+react-native-starter
 =======================
 
 A node-express application
@@ -45,7 +45,7 @@ You must start ngrok after starting the project.
 ./ngrok http 3000
 ```
 
-Next, you must use the https URL defined by ngrok, for example, `https://project_name.ngrok.io`
+Next, you must use the https URL defined by ngrok, for example, `https://react-native-starter.ngrok.io`
 
 **Note:** I highly recommend installing [Nodemon](https://github.com/remy/nodemon).
 It watches for any changes in your  node.js app and automatically restarts the
@@ -346,7 +346,7 @@ how a particular functionality works. Maybe you are just curious about
 how it works, or perhaps you are lost and confused while reading the code,
 I hope it provides some guidance to you.
 
-### How do I use Socket.io with project_name?
+### How do I use Socket.io with react-native-starter?
 First, you need to install socket.io:
 ```js
 npm install socket.io

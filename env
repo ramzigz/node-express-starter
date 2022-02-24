@@ -1,22 +1,13 @@
 NODE_ENV=development
 PORT=5000
-APP_NAME=project_name
-; BASE_URL=http://localhost:5000
-; WEB_URL=https://www.dev.lokatout.l-wa.com
-; ADMIN_URL=https://admin.dev.lokatout.l-wa.com
+APP_NAME=react-native-starter
 MONGODB_URI=mongodb://localhost:27017/test_db
 TOKEN_SECRET=956ae3ba-ed7e-4c3f-b711-27c3783f9845
 SESSION_SECRET=b\xebr\x17D*t\xae\xd4\xe3S\xb6\xe2\xebP1\x8b
 SENDGRID_API_KEY=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
-FILE_SIZE_LIMIT=5
+FILE_SIZE_LIMIT=5 ;MB
 
-; GOOGLE_ID_MOBILE_DEBUG=222104909341-t17tavtgucpd7e4d1i067cefpcic3op6.apps.googleusercontent.com
-; GOOGLE_ID_MOBILE_RELEASE=222104909341-s0qhngk26b73kkl9tqij0rd2ir27389a.apps.googleusercontent.com
-; GOOGLE_ID_WEB=222104909341-th7evt11qiii3845a6ru83i2i8qh7dps.apps.googleusercontent.com
 
-; FACEBOOK_APP_ID=580154276467170
-; FACEBOOK_APP_SECRET=a6bedb429a3457d6f516cbe1a590612a
-
-; EMAIL=noreply@lokatout.com
-; EMAIL_PASSWORD=Laxmi84700@
+EMAIL=
+EMAIL_PASSWORD=
 

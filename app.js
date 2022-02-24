@@ -135,7 +135,7 @@ exec("stat -c '%y' ./package.json", (error, stdout, stderr) => {
 
 app.get('/', (req, res, next) => {
   res.status(200).json({
-    msg: 'project_name API',
+    msg: 'react-native-starter API',
     port: process.env.PORT || 5000,
     lastBuildDate,
   });

@@ -1,9 +1,9 @@
 {
-  "name": "project_name-api",
+  "name": "react-native-starter-api",
   "version": "0.1.0",
-  "description": "project_name",
+  "description": "react-native-starter",
   "license": "MIT",
-  "author": "Ramzi-Gz",
+  "author": "RamziGz",
   "main": "app.js",
   "type": "module",
   "scripts": {
@@ -48,23 +48,19 @@
     "passport-oauth": "^1.0.0",
     "passport-oauth2-refresh": "^2.1.0",
     "slug": "^5.2.0",
-    "swagger-ui-express": "^4.3.0",
-    "uuid": "^8.3.2"
+    "swagger-ui-express": "^4.3.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.16.8",
     "@babel/core": "^7.16.12",
     "@babel/node": "^7.16.8",
-    "@babel/plugin-proposal-class-properties": "^7.16.7",
     "@babel/plugin-transform-runtime": "^7.16.10",
     "@babel/preset-env": "^7.16.11",
-    "@babel/preset-react": "^7.16.7",
     "chai": "^4.3.6",
     "eslint": "^8.8.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.25.4",
     "nodemon": "^2.0.15",
-    "nyc": "^15.1.0",
     "sinon": "^13.0.0",
     "supertest": "^6.2.2"
   },
