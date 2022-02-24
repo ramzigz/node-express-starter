@@ -107,13 +107,6 @@ app.use(
     { maxAge: 31557600000 }
   )
 );
-app.use(
-  '/assets',
-  express.static(
-    path.join(__dirname, 'assets'),
-    { maxAge: 31557600000 }
-  )
-);
 
 createAdmin();
 
