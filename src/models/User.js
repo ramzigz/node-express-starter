@@ -6,7 +6,7 @@ const { Schema } = mongoose;
 const userSchema = new Schema(
   {
     email: { type: String, unique: true, required: true },
-    password: { type: String, minlength: 8 },
+    password: { type: String, minlength: 8, selected: false },
     passwordResetToken: String,
     passwordResetExpires: Date,
 
@@ -14,7 +14,7 @@ const userSchema = new Schema(
     emailVerificationCode: String,
     emailVerified: { type: Boolean, default: false },
 
-    tokens: [],
+    tokens: { type: Array, default: [], selected: false },
     google: String,
     facebook: String,
     apple: String,
