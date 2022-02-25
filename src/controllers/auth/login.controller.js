@@ -67,7 +67,9 @@ export async function login({
       authMiddleware.removeExpiredTokens(user);
 
       return res.status(httpStatusCodes.OK).json(
-        responseHandler({ data: { user: returnedUser, token, tokenExpiresAt: moment().add(7, 'days').unix() } }),
+        responseHandler({ data: { user: returnedUser,
+          token,
+          tokenExpiresAt: moment().add(7, 'days').unix() } }),
       );
     });
   })(req, res, next);
@@ -139,9 +141,7 @@ export async function loginGoogle({
 
     if (existingUser) {
       return next(
-        new ErrorHandler(
-          httpStatusCodes.BAD_REQUEST, 'User with given email is already exist please try another email', httpStatusCodes.EMAIL_ALREADY_USED,
-        ),
+        new ErrorHandler(httpStatusCodes.BAD_REQUEST, 'User with given email is already exist please try another email', httpStatusCodes.EMAIL_ALREADY_USED,),
       );
     }
 
@@ -195,7 +195,7 @@ export async function loginGoogle({
 
 export async function loginFacebook({
   req, res, next,
-  passport, ErrorHandler, httpStatusCodes, responseHandler,
+  ErrorHandler, httpStatusCodes, responseHandler,
   jwt, secret, usersService,
 }) {
   try {
@@ -241,7 +241,11 @@ export async function loginFacebook({
       authMiddleware.removeExpiredTokens(facebookUser);
 
       return res.status(httpStatusCodes.OK).json(
-        responseHandler({ data: { user: returnedUser, token: localToken, tokenExpiresAt: moment().add(7, 'days').unix() } }),
+        responseHandler({ data: {
+          user: returnedUser,
+          token: localToken,
+          tokenExpiresAt: moment().add(7, 'days').unix(),
+        } }),
       );
     }
 
@@ -250,7 +254,9 @@ export async function loginFacebook({
     if (existingUser) {
       return next(
         new ErrorHandler(
-          httpStatusCodes.BAD_REQUEST, 'User with given email is already exist please try another email', httpStatusCodes.EMAIL_ALREADY_USED,
+          httpStatusCodes.BAD_REQUEST,
+          'User with given email is already exist please try another email',
+          httpStatusCodes.EMAIL_ALREADY_USED
         ),
       );
     }
@@ -298,7 +304,11 @@ export async function loginFacebook({
       authMiddleware.removeExpiredTokens(createdUser);
 
       return res.status(httpStatusCodes.OK).json(
-        responseHandler({ data: { user: returnedUser, token: localToken, tokenExpiresAt: moment().add(7, 'days').unix() } }),
+        responseHandler({ data: {
+          user: returnedUser,
+          token: localToken,
+          tokenExpiresAt: moment().add(7, 'days').unix(),
+        } }),
       );
     }
 
@@ -315,8 +325,8 @@ export async function loginFacebook({
 
 export async function loginApple({
   req, res, next,
-  passport, ErrorHandler, httpStatusCodes, responseHandler,
-  jwt, secret, usersService, crypto,
+  ErrorHandler, httpStatusCodes, responseHandler,
+  jwt, secret, usersService,
   appleSigninAuth,
 }) {
   try {
@@ -362,7 +372,11 @@ export async function loginApple({
       authMiddleware.removeExpiredTokens(appleUser);
 
       return res.status(httpStatusCodes.OK).json(
-        responseHandler({ data: { user: returnedUser, token: localToken, tokenExpiresAt: moment().add(7, 'days').unix() } }),
+        responseHandler({ data: {
+          user: returnedUser,
+          token: localToken,
+          tokenExpiresAt: moment().add(7, 'days').unix(),
+        } }),
       );
     }
 
@@ -371,7 +385,9 @@ export async function loginApple({
     if (existingUser) {
       return next(
         new ErrorHandler(
-          httpStatusCodes.BAD_REQUEST, 'User with given email is already exist please try another email', httpStatusCodes.EMAIL_ALREADY_USED,
+          httpStatusCodes.BAD_REQUEST,
+          'User with given email is already exist please try another email',
+          httpStatusCodes.EMAIL_ALREADY_USED
         ),
       );
     }
@@ -419,7 +435,11 @@ export async function loginApple({
       authMiddleware.removeExpiredTokens(createdUser);
 
       return res.status(httpStatusCodes.OK).json(
-        responseHandler({ data: { user: returnedUser, token: localToken, tokenExpiresAt: moment().add(7, 'days').unix() } }),
+        responseHandler({ data: {
+          user: returnedUser,
+          token: localToken,
+          tokenExpiresAt: moment().add(7, 'days').unix(),
+        } }),
       );
     }
 

@@ -1,11 +1,11 @@
 /* eslint-disable no-underscore-dangle */
 
 import moment from 'moment';
+import crudHandler from '../../services/crudHandler.js';
 
 export default async function signup({
   req, res, next,
   ErrorHandler, httpStatusCodes, responseHandler,
-  usersService, addressService, activityTypesService,
   jwt, secret,
 }) {
   const {
@@ -28,63 +28,30 @@ export default async function signup({
     region,
   };
 
-  let usr = { ...userData };
+  const existUser = await crudHandler.getOne({
+    model: 'User',
+    filters: { email: userData.email },
+  });
 
-  const existUser = await usersService.getOne({ email: userData.email });
   if (existUser) {
     return next(
       new ErrorHandler(
-        httpStatusCodes.BAD_REQUEST, 'User with given email is already exist please try another email', httpStatusCodes.EMAIL_ALREADY_USED,
+        httpStatusCodes.BAD_REQUEST,
+        'User with given email is already exist please try another email',
+        httpStatusCodes.EMAIL_ALREADY_USED,
       ),
     );
   }
 
-  const address = await addressService.create(addressData);
+  const address = await crudHandler.create({ model: 'Address', data: addressData });
+  console.log('address', address);
 
-  if (userData?.userType === 'LP' && company) {
-    const activityType = await activityTypesService.getById(company.activityType, '', '_id');
-    if (!activityType || activityType.error) {
-      return next(
-        new ErrorHandler(
-          httpStatusCodes.BAD_REQUEST, 'Company activityType is not a valid id', httpStatusCodes.BAD_REQUEST,
-        ),
-      );
-    }
-
-    const companyAddressData = {
-      street: company.street,
-      postalCode: company.postalCode,
-      city: company.city,
-      country: company.country,
-    };
-
-    const companyAddress = await addressService.create(companyAddressData);
-    const companyData = {
-      address: companyAddress._id,
-      siret: company.siret,
-      name: company.name,
-      activityType: company.activityType,
-      phone: company.phone,
-    };
-
-    usr = {
-      ...usr,
-      company: companyData,
-      userType: userData.userType,
-    };
-  } else {
-    usr = {
-      ...usr,
-      company: null,
-    };
-  }
-
-  usr = {
-    ...usr,
+  const usrData = {
+    ...userData,
     address: address._id,
   };
 
-  const user = await usersService.create(usr);
+  const user = await crudHandler.create({ model: 'User', data: usrData });
 
   if (user && !user.error) {
     const returnedUser = {
@@ -107,12 +74,16 @@ export default async function signup({
     user.save();
 
     return res.status(httpStatusCodes.OK).json(
-      responseHandler({ data: { user: returnedUser, token }, statusCode: httpStatusCodes.OK }),
+      responseHandler({ data: { user: returnedUser, token },
+        statusCode: httpStatusCodes.OK }),
     );
   }
   return next(
     new ErrorHandler(
-      httpStatusCodes.BAD_REQUEST, user.error, httpStatusCodes.BAD_REQUEST,
+      httpStatusCodes.BAD_REQUEST,
+      user.error,
+
+      httpStatusCodes.BAD_REQUEST,
     ),
   );
 }

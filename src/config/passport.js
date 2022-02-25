@@ -3,7 +3,7 @@ import passport from 'passport';
 import LocalStrategy from 'passport-local';
 
 import User from '../models/User.js';
-import usersService from '../services/users.services.js';
+import crudHandler from '../services/crudHandler.js';
 
 export default function initPassport() {
   passport.serializeUser((user, done) => {
@@ -23,7 +23,10 @@ export default function initPassport() {
   passport.use(new LocalStrategy(
     { usernameField: 'email' },
     async (email, password, done) => {
-      const user = await usersService.getOne({ email: email.toLowerCase() });
+      const user = await crudHandler.getOne({
+        model: 'User',
+        filters: { email: email.toLowerCase() },
+      });
 
       if (!user) { return done(null, false, { msg: 'Invalid email or password.' }); }
 

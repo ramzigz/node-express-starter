@@ -2,6 +2,8 @@ import passport from 'passport';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import appleSigninAuth from 'apple-signin-auth';
+import * as OAuth2Client from 'google-auth-library';
+import util from 'util';
 import httpStatusCodes from '../../utils/httpStatusCodes.js';
 import * as login from './login.controller.js';
 import logout from './logout.controller.js';
@@ -13,10 +15,6 @@ import usersService from '../../services/users.services.js';
 import addressService from '../../services/address.services.js';
 import * as emailVerificationController from './email-verification.controller.js';
 import generateCode from '../../utils/codeGenerator.js';
-
-import * as OAuth2Client from 'google-auth-library';
-
-import  util from 'util';
 
 const randomBytesAsync = util.promisify(crypto.randomBytes);
 
@@ -32,7 +30,6 @@ const signin = (req, res, next) => {
     responseHandler,
     jwt,
     secret,
-    usersService,
   });
 };
 
@@ -179,4 +176,4 @@ export default {
   loginGoogle,
   forgotPassword,
   logoutUser,
-}
+};
