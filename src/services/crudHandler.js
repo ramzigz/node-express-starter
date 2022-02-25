@@ -5,7 +5,6 @@ const crudHandler = {
     try {
       if (!model || model === '') return { error: 'No model provided' };
       const created = await new models[model](data).save();
-
       if (!created?.error) {
         return await crudHandler.getById({ model, id: created._id });
       }
