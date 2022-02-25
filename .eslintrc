@@ -10,7 +10,7 @@
     "sourceType": "module"
   },
   "rules":{
-    "max-len": ["error", 90, 2],
+    "max-len": ["error", 120, 2],
     "object-curly-newline": ["error", { "consistent": true }],
     "no-param-reassign": ["error", { "props": false }],
     "import/extensions": ["error", "always", {
