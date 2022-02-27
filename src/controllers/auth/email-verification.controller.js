@@ -1,10 +1,7 @@
-/* eslint-disable no-underscore-dangle */
-import sendMail from '../../utils/sendEmail.js';
-import verifyEmailTemplate from '../../utils/verifyEmailTemplate.js';
-
 export async function sendVerificationEmail({
-  req, res, next, usersService, ErrorHandler, responseHandler,
+  req, res, next, crudHandler, ErrorHandler, responseHandler,
   httpStatusCodes, generateCode, randomBytesAsync,
+  sendMail, verifyEmailTemplate,
 }) {
   try {
     let userEmail = req.user.email || req.body.email;
@@ -12,7 +9,8 @@ export async function sendVerificationEmail({
     const setRandomToken = async () => {
       const code = generateCode(5);
       const token = await randomBytesAsync(32);
-      let user = await usersService.getOne({ email: userEmail });
+      let user = await crudHandler.getOne({ model: 'User', filters: { email: userEmail } });
+
       if (!user) {
         return next(new ErrorHandler(httpStatusCodes.BAD_REQUEST, 'Account with that email address does not exist.'));
       }
@@ -47,15 +45,23 @@ export async function sendVerificationEmail({
 
     return setRandomToken()
       .then(sendEmail)
-      .then(() => res.status(httpStatusCodes.OK).json(responseHandler({ message: `An email containing a verification code was sent successfully to ${userEmail}`, msgCode: httpStatusCodes.FORGOT_PASSWORD_EMAIL })))
-      .catch((err) => next(new ErrorHandler(httpStatusCodes.INTERNAL_SERVER, { msg: 'An error occured while sending the email', err })));
+      .then(() => res.status(httpStatusCodes.OK)
+        .json(responseHandler({
+          message: `An email containing a verification code was sent successfully to ${userEmail}`,
+          msgCode: httpStatusCodes.FORGOT_PASSWORD_EMAIL,
+        })))
+      .catch((err) => next(new ErrorHandler(
+        httpStatusCodes.INTERNAL_SERVER,
+        { msg: 'An error occured while sending the email',
+          err }
+      )));
   } catch (error) {
     return next(new ErrorHandler(httpStatusCodes.INTERNAL_SERVER));
   }
 }
 
 export async function verifyEmail({
-  req, res, next, usersService, ErrorHandler,
+  req, res, next, crudHandler, ErrorHandler,
   responseHandler, httpStatusCodes, generateCode,
   randomBytesAsync,
 }) {
@@ -65,12 +71,12 @@ export async function verifyEmail({
       return next(new ErrorHandler(httpStatusCodes.BAD_REQUEST, 'Token is invalid or has expired.'));
     }
 
-    const filter = {
+    const filters = {
       ...(token && { emailVerificationToken: token }),
       ...(code && { emailVerificationCode: code }),
     };
 
-    const user = await usersService.getOne(filter);
+    const user = await crudHandler.getOne({ model: 'User', filters });
 
     if (!user) {
       return next(new ErrorHandler(httpStatusCodes.BAD_REQUEST, 'Token is invalid or has expired.'));

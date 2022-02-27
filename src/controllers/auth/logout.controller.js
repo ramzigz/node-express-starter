@@ -1,8 +1,8 @@
 /* eslint-disable no-underscore-dangle */
 export default async function logout({
-  req, res, httpStatusCodes, responseHandler, usersService,
+  req, res, httpStatusCodes, responseHandler, crudHandler,
 }) {
-  const user = await usersService.getById(req.user._id, '', '');
+  const user = await crudHandler.getOne({ model: 'User', id: req.user._id });
 
   for (let index = 0; index < user.tokens.length; index += 1) {
     const tokenItem = user.tokens[index];
@@ -13,7 +13,6 @@ export default async function logout({
   }
   user.save();
 
-  // await usersService.update(req.user._id, { token: '' });
   return res.status(httpStatusCodes.OK).json(
     responseHandler({ message: 'User disconnected' }),
   );

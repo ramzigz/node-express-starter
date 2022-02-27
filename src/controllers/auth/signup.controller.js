@@ -44,7 +44,6 @@ export default async function signup({
   }
 
   const address = await crudHandler.create({ model: 'Address', data: addressData });
-  console.log('address', address);
 
   const usrData = {
     ...userData,

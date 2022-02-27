@@ -7,11 +7,11 @@
   "main": "app.js",
   "type": "module",
   "scripts": {
-    "build": "babel app.js --out-file app.js && babel src --out-dir src",
+    "build": "babel src --out-dir src",
     "lint": "eslint source/ --quiet",
-    "start": "npm run build && node app.js > uploads/appLogs.log",
-    "local": "nodemon --exec babel-node app.js",
-    "debug": "node --inspect app.js",
+    "start": "node src/app.js",
+    "local": "nodemon --exec babel-node src/app.js",
+    "debug": "node --inspect src/app.js",
     "test": "for i in $(ls tests/); do babel-node \"./tests/${i}\" | faucet ; done",
     "validate": "npm run lint; npm run test && npm outdated --depth 0"
   },
@@ -37,6 +37,7 @@
     "lodash": "^4.17.21",
     "log4js": "^6.4.1",
     "mime": "^3.0.0",
+    "module-alias": "^2.2.2",
     "moment": "^2.29.1",
     "mongoose": "^6.1.8",
     "morgan": "^1.10.0",
@@ -60,6 +61,7 @@
     "@babel/plugin-transform-runtime": "^7.16.10",
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-react": "^7.16.7",
+    "@types/module-alias": "^2.0.1",
     "chai": "^4.3.6",
     "eslint": "^8.8.0",
     "eslint-config-airbnb-base": "^15.0.0",
@@ -67,6 +69,10 @@
     "nodemon": "^2.0.15",
     "sinon": "^13.0.0",
     "supertest": "^6.2.2"
+  },
+  "_moduleAliases": {
+    "@root": ".",
+    "@middlewares": "src/middlewares"
   },
   "engines": {
     "node": ">=10.23.1",

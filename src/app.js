@@ -4,11 +4,11 @@
 /**
  * Module dependencies.
  */
+import 'module-alias/register.js';
 import express from 'express';
 import compression from 'compression';
 import helmet from 'helmet';
 import logger from 'morgan';
-
 import dotenv from 'dotenv';
 import flash from 'express-flash';
 import path from 'path';
@@ -22,15 +22,15 @@ import { exec } from 'child_process';
 import chalk from 'chalk';
 import MongoStore from 'connect-mongo';
 import { fileURLToPath } from 'url';
-import log4j from './src/config/configLog4js.js';
-import { handleError } from './src/utils/errorsHandler.js';
-import initPassportport from './src/config/passport.js';
+import log4j from './config/configLog4js.js';
+import { handleError } from './utils/errorsHandler.js';
+import initPassportport from './config/passport.js';
 
 /**
   * Routes
   */
-import appRoutes from './src/routes/index.js';
-import createAdmin from './src/helpers/createAdmin.js';
+import appRoutes from './routes/index.js';
+import createAdmin from './helpers/createAdmin.js';
 
 /**
   * Load environment variables from .env file,
@@ -50,7 +50,16 @@ app.use(cors({ origin: true, credentials: true }));
   * Connect to MongoDB.
   */
 
-mongoose.connect(process.env.MONGODB_URI);
+mongoose.connect(process.env.MONGODB_URI)
+  .then(() => log4j.loggerinfo.info(
+    '%s Database connected!',
+    chalk.green('✓'),
+  ))
+  .catch((err) => log4j.loggerinfo.error(
+    '%s MongoDB connection error.%s',
+    chalk.red('✗'),
+    err
+  ));
 
 mongoose.connection.on('error', () => {
   log4j.loggerinfo.error(
