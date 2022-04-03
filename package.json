@@ -1,17 +1,17 @@
 {
-  "name": "react-native-starter-api",
+  "name": "node-express-starter-api",
   "version": "0.1.0",
-  "description": "react-native-starter",
+  "description": "node-express-starter",
   "license": "MIT",
   "author": "RamziGz",
   "main": "app.js",
   "type": "module",
   "scripts": {
-    "build": "babel src --out-dir src",
+    "build": "babel src --out-dir build",
     "lint": "eslint source/ --quiet",
-    "start": "node src/app.js",
-    "local": "nodemon --exec babel-node src/app.js",
-    "debug": "node --inspect src/app.js",
+    "start": "node build/app.js",
+    "start:local": "nodemon --exec babel-node src/app.js",
+    "start:debug": "node --inspect src/app.js",
     "test": "for i in $(ls tests/); do babel-node \"./tests/${i}\" | faucet ; done",
     "validate": "npm run lint; npm run test && npm outdated --depth 0"
   },

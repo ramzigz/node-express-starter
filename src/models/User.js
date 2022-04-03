@@ -35,39 +35,13 @@ const userSchema = new Schema(
     },
 
     isActive: { type: Boolean, default: true },
-    isVerified: { type: Boolean, default: false },
+
     role: {
       type: String,
-      enum: ['ADMIN', 'CLIENT'],
-      default: 'CLIENT',
+      enum: ['ADMIN', 'USER'],
+      default: 'USER',
       required: true,
     },
-
-    userType: {
-      type: String,
-      enum: ['LP', 'NP'],
-      default: 'NP',
-      required: true,
-    },
-
-    company: {
-      siret: { type: String, default: '' },
-      name: { type: String, default: '' },
-      activityType: { type: Schema.Types.ObjectId, ref: 'ActivityType', default: null },
-      address: { type: Schema.Types.ObjectId, ref: 'Address', default: null },
-      phone: { type: String, default: '' },
-    },
-
-    iban: { type: String, maxlength: 34 },
-    kbis: { type: Schema.Types.ObjectId, ref: 'File', default: null },
-    identitySide1: { type: Schema.Types.ObjectId, ref: 'File', default: null },
-    identitySide2: { type: Schema.Types.ObjectId, ref: 'File', default: null },
-    drivingLicenceSide1: { type: Schema.Types.ObjectId, ref: 'File', default: null },
-    drivingLicenceSide2: { type: Schema.Types.ObjectId, ref: 'File', default: null },
-
-    stripeCustomerId: String,
-    stripeAccountId: String,
-
   },
   { timestamps: true, versionKey: false },
 );

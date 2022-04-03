@@ -3,7 +3,7 @@ import JoiImport from 'joi';
 
 const Joi = JoiImport.extend(DateExtension);
 
-export default{
+export default {
   // POST /signup
   signup: {
     body: Joi.object({
@@ -28,20 +28,6 @@ export default{
       regionCode: Joi.string().allow(''),
       userType: Joi.string()
         .valid('LP', 'NP'),
-      company: Joi.object({
-        street: Joi.string().allow(''),
-        postalCode: Joi.string().allow(''),
-        city: Joi.string().allow(''),
-        country: Joi.string().allow(''),
-        siret: Joi.string().allow(''),
-        name: Joi.string().allow(''),
-        activityType: Joi.string()
-          .regex((/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i))
-          .messages({
-            'string.pattern.base': 'activityType should be a valid mongo id',
-          }),
-        phone: Joi.string().length(10).pattern(/^[0-9]+$/),
-      }),
     }),
   },
 

@@ -1,16 +1,13 @@
 import { ErrorHandler } from '../../utils/errorsHandler.js';
 import httpStatusCodes from '../../utils/httpStatusCodes.js';
 import responseHandler from '../../utils/responseHandler.js';
-import usersService from '../../services/users.services.js';
-import addressService from '../../services/address.services.js';
-import filesService from '../../services/file.services.js';
-
 import get from './get.controller.js';
 import { isAdmin } from '../../helpers/checkAuth.js';
 import createFilters from '../../helpers/createFilters.js';
 import { update, updatePassword } from './update.controller.js';
 import deleteUsr from './delete.controller.js';
 import deleteFile from '../../utils/deleteFile.js';
+import crudHandler from '../../services/crudHandler.js';
 
 const getAll = (req, res, next) => {
   get.all({
@@ -20,33 +17,32 @@ const getAll = (req, res, next) => {
     ErrorHandler,
     httpStatusCodes,
     responseHandler,
-    usersService,
+    crudHandler,
     createFilters,
   });
 };
 
 const getOne = (req, res, next) => {
   get.one({
-    req, res, next, ErrorHandler, httpStatusCodes, responseHandler, usersService,
-  });
-};
-
-const getMyProfile = (req, res, next) => {
-  get.myProfile({
-    req, res, next, ErrorHandler, httpStatusCodes, responseHandler, usersService,
-  });
-};
-
-const getUsersStats = (req, res, next) => {
-  get.stats({
     req,
     res,
     next,
     ErrorHandler,
     httpStatusCodes,
     responseHandler,
-    usersService,
-    createFilters,
+    crudHandler,
+  });
+};
+
+const getMyProfile = (req, res, next) => {
+  get.myProfile({
+    req,
+    res,
+    next,
+    ErrorHandler,
+    httpStatusCodes,
+    responseHandler,
+    crudHandler,
   });
 };
 
@@ -58,13 +54,12 @@ const updateUser = (req, res, next) => {
     ErrorHandler,
     httpStatusCodes,
     responseHandler,
-    usersService,
-    addressService,
-    filesService,
+    crudHandler,
     isAdmin,
     deleteFile,
   });
 };
+
 const updateUserPassword = (req, res, next) => {
   updatePassword({
     req,
@@ -73,8 +68,7 @@ const updateUserPassword = (req, res, next) => {
     ErrorHandler,
     httpStatusCodes,
     responseHandler,
-    usersService,
-    addressService,
+    crudHandler,
     isAdmin,
   });
 };
@@ -87,9 +81,7 @@ const deleteUser = (req, res, next) => {
     ErrorHandler,
     httpStatusCodes,
     responseHandler,
-    usersService,
-    addressService,
-    filesService,
+    crudHandler,
     deleteFile,
   });
 };
@@ -98,7 +90,6 @@ export {
   deleteUser,
   updateUserPassword,
   updateUser,
-  getUsersStats,
   getMyProfile,
-  getOne,getAll
-}
+  getOne, getAll,
+};

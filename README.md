@@ -1,4 +1,4 @@
-react-native-starter
+node-express-starter
 =======================
 
 A node-express application
@@ -27,13 +27,13 @@ The easiest way to get started is to clone the repository:
 
 
 # Change directory
-cd api
+cd node-express-starter
 
 # Install NPM dependencies
 npm install
 
 # Then simply start your app
-node app.js
+npm run start:local
 ```
 
 **Warning:** If you want to use some API that need https to work (for example Pinterest or facebook),
@@ -41,11 +41,10 @@ you will need to download [ngrok](https://ngrok.com/).
 You must start ngrok after starting the project.
 
 ```bash
-# start ngrok to intercept the data exchanged on port 3000
-./ngrok http 3000
+# start ngrok to intercept the data exchanged on port 5000
+./ngrok http 5000
 ```
 
-Next, you must use the https URL defined by ngrok, for example, `https://react-native-starter.ngrok.io`
 
 **Note:** I highly recommend installing [Nodemon](https://github.com/remy/nodemon).
 It watches for any changes in your  node.js app and automatically restarts the
@@ -88,8 +87,8 @@ credentials.
 - Fill out the required fields then click on **Save**
 - In the *Create Client ID* modal dialog:
  - **Application Type**: Web Application
- - **Authorized Javascript origins**: http://localhost:3000
- - **Authorized redirect URI**: http://localhost:3000/auth/google/callback
+ - **Authorized Javascript origins**: http://localhost:5000
+ - **Authorized redirect URI**: http://localhost:5000/auth/google/callback
 - Click on **Create Client ID** button
 - Copy and paste *Client ID* and *Client secret* keys into `.env`
 
@@ -115,9 +114,9 @@ The same goes for other providers.
 - Enter `localhost` under *App Domains*
 - Choose a **Category** that best describes your app
 - Click on **+ Add Platform** and select **Website**
-- Enter `http://localhost:3000` under *Site URL*
+- Enter `http://localhost:5000` under *Site URL*
 - Click on the *Settings* tab in the left nav under Facebook Login
-- Enter `http://localhost:3000/auth/facebook/callback` under Valid OAuth redirect URIs
+- Enter `http://localhost:5000/auth/facebook/callback` under Valid OAuth redirect URIs
 
 **Note:** After a successful sign in with Facebook, a user will be redirected back to the home page with appended hash `#_=_` in the URL. It is *not* a bug. See this [Stack Overflow](https://stackoverflow.com/questions/7131909/facebook-callback-appends-to-return-url) discussion for ways to handle it.
 
@@ -129,7 +128,7 @@ The same goes for other providers.
 - Select **Developer settings** from the sidebar
 - Then click on **OAuth Apps** and then on **Register new application**
 - Enter *Application Name* and *Homepage URL*
-- For *Authorization Callback URL*: http://localhost:3000/auth/github/callback
+- For *Authorization Callback URL*: http://localhost:5000/auth/github/callback
 - Click **Register application**
 - Now copy and paste *Client ID* and *Client Secret* keys into `.env` file
 
@@ -144,8 +143,8 @@ The same goes for other providers.
  - *It may ask you to sign in once again*
 - Click **+ Add New Application** button
 - Fill out all the *required* fields
- - **OAuth 2.0 Redirect URLs**: http://localhost:3000/auth/linkedin/callback
- - **JavaScript API Domains**: http://localhost:3000
+ - **OAuth 2.0 Redirect URLs**: http://localhost:5000/auth/linkedin/callback
+ - **JavaScript API Domains**: http://localhost:5000
 - For **Default Application Permissions** make sure at least the following is checked:
  - `r_basicprofile`
 - Finish by clicking **Add Application** button
@@ -346,7 +345,7 @@ how a particular functionality works. Maybe you are just curious about
 how it works, or perhaps you are lost and confused while reading the code,
 I hope it provides some guidance to you.
 
-### How do I use Socket.io with react-native-starter?
+### How do I use Socket.io with node-express-starter?
 First, you need to install socket.io:
 ```js
 npm install socket.io
@@ -650,7 +649,7 @@ After installing docker, start the application with the following commands :
 
 ```
 
-To view the app, find your docker IP address + port 3000 ( this will typically be http://localhost:3000/ ).  To use a port other than 3000, you would need to modify the port in app.js, Dockerfile, and docker-compose.yml.
+To view the app, find your docker IP address + port 5000 ( this will typically be http://localhost:5000/ ).  To use a port other than 5000, you would need to modify the port in app.js, Dockerfile, and docker-compose.yml.
 
 
 License

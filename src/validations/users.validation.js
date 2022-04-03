@@ -25,25 +25,6 @@ export default {
       regionCode: Joi.string().allow(''),
       isActive: Joi.boolean(),
       isVerified: Joi.boolean(),
-      iban: Joi.string().max(34).allow(''),
-      identitySide1: Joi.allow(null),
-      identitySide2: Joi.allow(null),
-      drivingLicenceSide1: Joi.allow(null),
-      drivingLicenceSide2: Joi.allow(null),
-      company: Joi.object({
-        street: Joi.string().allow(''),
-        postalCode: Joi.string().allow(''),
-        city: Joi.string().allow(''),
-        country: Joi.string().allow(''),
-        siret: Joi.string(),
-        name: Joi.string(),
-        activityType: Joi.string()
-          .regex((/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i))
-          .messages({
-            'string.pattern.base': 'activityType should be a valid mongo id',
-          }).allow(null),
-        phone: Joi.string().length(10).pattern(/^[0-9]+$/).allow(''),
-      }),
     }),
   },
   // PATCH USER
@@ -70,31 +51,7 @@ export default {
         .email(),
       emailVerified: Joi.boolean(),
       role: Joi.string()
-        .valid('ADMIN', 'CLIENT'),
-      iban: Joi.string().max(34).allow(''),
-      identitySide1: Joi.allow(null),
-      identitySide2: Joi.allow(null),
-      drivingLicenceSide1: Joi.allow(null),
-      drivingLicenceSide2: Joi.allow(null),
-      company: Joi.object({
-        street: Joi.string(),
-        postalCode: Joi.string(),
-        city: Joi.string(),
-        country: Joi.string(),
-        siret: Joi.string(),
-        name: Joi.string(),
-        activityType: Joi.string()
-          .regex((/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i))
-          .messages({
-            'string.pattern.base': 'activityType should be a valid mongo id',
-          }),
-        phone: Joi.string().length(10).pattern(/^[0-9]+$/).allow(''),
-        kbis: Joi.string()
-          .regex((/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i))
-          .messages({
-            'string.pattern.base': 'activityType should be a valid mongo id',
-          }).allow(null),
-      }),
+        .valid('ADMIN', 'USER'),
     }),
   },
 

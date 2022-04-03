@@ -1,11 +1,11 @@
 /* eslint-disable no-underscore-dangle */
 
 import moment from 'moment';
-import crudHandler from '../../services/crudHandler.js';
 
 export default async function signup({
   req, res, next,
   ErrorHandler, httpStatusCodes, responseHandler,
+  crudHandler,
   jwt, secret,
 }) {
   const {
@@ -15,7 +15,6 @@ export default async function signup({
     country,
     regionCode,
     region,
-    company,
     ...userData
   } = req.body;
 

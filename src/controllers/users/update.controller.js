@@ -1,5 +1,4 @@
 /* eslint-disable no-underscore-dangle */
-import filesService from '../../services/file.services.js';
 import deleteFile from '../../utils/deleteFile.js';
 
 async function createFileAndReturnId(
@@ -7,8 +6,7 @@ async function createFileAndReturnId(
     file,
     userId,
     oldFile,
-    // oldFilePath: oldData.profile.picture.path,
-    // oldFileId: oldData.profile.picture._id,
+    crudHandler,
   },
 ) {
   const filePayload = {
@@ -22,33 +20,35 @@ async function createFileAndReturnId(
   };
 
   if (oldFile) {
-    await filesService.delete(oldFile._id);
+    await crudHandler.delete(oldFile._id);
     deleteFile(oldFile.path);
   }
 
-  const { _id } = await filesService.create(filePayload);
+  const { _id } = await crudHandler.create(filePayload);
   return _id;
 }
 
 export async function update({
   req, res, next, ErrorHandler,
   httpStatusCodes, responseHandler,
-  usersService, addressService, isAdmin,
+  crudHandler, isAdmin,
 }) {
   const userId = req.params.id || req.user._id;
 
   if (req.params.id && !isAdmin(req.user)) {
     return next(
-      new ErrorHandler(
-        httpStatusCodes.FORBIDDEN, 'Not authorized to modify this ressource',
-      ),
+      new ErrorHandler(httpStatusCodes.FORBIDDEN, 'Not authorized to modify this ressource',),
     );
   }
 
-  const oldData = await usersService.getById(userId, [{
-    path: 'profile.picture identitySide1 identitySide2 kbis drivingLicenceSide1 drivingLicenceSide2',
-    select: '-__v',
-  }]);
+  const oldData = await crudHandler.getById({
+    model: 'User',
+    id: userId,
+    populate: [{
+      path: 'profile.picture',
+      select: '-__v',
+    }],
+  });
 
   const {
     street,
@@ -60,7 +60,12 @@ export async function update({
     ...userData
   } = req.body;
 
-  let payload = { ...userData };
+  const {
+    email,
+    ...profile
+  } = userData;
+
+  let payload = { profile, email };
 
   const addressData = {
     street,
@@ -72,10 +77,14 @@ export async function update({
   };
 
   if (oldData?.profile?.address) {
-    await addressService.update(oldData.profile.address, addressData);
+    await crudHandler.update({
+      model: 'Address',
+      id: oldData.profile.address,
+      data: addressData,
+    });
   } else {
-    const address = await addressService.create(addressData);
-    payload = { ...payload, address: address._id };
+    const address = await crudHandler.create({ model: 'Address', data: addressData });
+    payload = { ...payload, profile: { ...profile, address: address._id } };
   }
 
   if (req.files) {
@@ -86,59 +95,10 @@ export async function update({
           file,
           userId: oldData._id,
           oldFile: oldData.profile.picture,
+          crudHandler,
         });
 
         payload = { ...payload, picture: newFileId };
-      }
-
-      if (req.files.identitySide1) {
-        const file = req.files.identitySide1[0];
-        const newFileId = await createFileAndReturnId({
-          file,
-          userId: oldData._id,
-          oldFile: oldData.identitySide1,
-        });
-        payload = { ...payload, identitySide1: newFileId };
-      }
-
-      if (req.files.identitySide2) {
-        const file = req.files.identitySide2[0];
-        const newFileId = await createFileAndReturnId({
-          file,
-          userId: oldData._id,
-          oldFile: oldData.identitySide2,
-        });
-        payload = { ...payload, identitySide2: newFileId };
-      }
-
-      if (req.files.drivingLicenceSide1) {
-        const file = req.files.drivingLicenceSide1[0];
-        const newFileId = await createFileAndReturnId({
-          file,
-          userId: oldData._id,
-          oldFile: oldData.drivingLicenceSide1,
-        });
-        payload = { ...payload, drivingLicenceSide1: newFileId };
-      }
-
-      if (req.files.drivingLicenceSide2) {
-        const file = req.files.drivingLicenceSide2[0];
-        const newFileId = await createFileAndReturnId({
-          file,
-          userId: oldData._id,
-          oldFile: oldData.drivingLicenceSide2,
-        });
-        payload = { ...payload, drivingLicenceSide2: newFileId };
-      }
-
-      if (req.files.kbis) {
-        const file = req.files.kbis[0];
-        const newFileId = await createFileAndReturnId({
-          file,
-          userId: oldData._id,
-          oldFile: oldData.kbis,
-        });
-        payload = { ...payload, kbis: newFileId };
       }
     } catch (error) {
       console.log('error adding files', error);
@@ -146,46 +106,25 @@ export async function update({
   }
 
   if (userData.email) {
-    const emailAlreadyExist = await usersService.getOne({ email: userData.email });
+    const emailAlreadyExist = await crudHandler.getOne({ filters: { email: userData.email } });
     if (emailAlreadyExist) {
       return next(
-        new ErrorHandler(
-          httpStatusCodes.FORBIDDEN, 'Email already used',
-        ),
+        new ErrorHandler(httpStatusCodes.FORBIDDEN, 'Email already used',),
       );
     }
     payload = { ...payload, emailVerified: false };
   }
 
-  if (userData.identitySide1 === null && oldData.identitySide1) {
-    payload = { ...payload, identitySide1: null };
-
-    await filesService.delete(oldData.identitySide1._id);
-    deleteFile(oldData.identitySide1.path);
-  }
-  if (userData.identitySide2 === null && oldData.identitySide2) {
-    payload = { ...payload, identitySide2: null };
-    await filesService.delete(oldData.identitySide2._id);
-    deleteFile(oldData.identitySide2.path);
-  }
-  if (userData.drivingLicenceSide1 === null && oldData.drivingLicenceSide1) {
-    payload = { ...payload, drivingLicenceSide1: null };
-    await filesService.delete(oldData.drivingLicenceSide1._id);
-    deleteFile(oldData.drivingLicenceSide1.path);
-  }
-  if (userData.drivingLicenceSide2 === null && oldData.drivingLicenceSide2) {
-    payload = { ...payload, drivingLicenceSide2: null };
-    await filesService.delete(oldData.drivingLicenceSide2._id);
-    deleteFile(oldData.drivingLicenceSide2.path);
-  }
-
-  const user = await usersService.update(userId, payload, '-tokens -password');
+  const user = await crudHandler.update({
+    model: 'User',
+    id: userId,
+    data: payload,
+    select: '-tokens -password',
+  });
 
   if (!user || user.error) {
     return next(
-      new ErrorHandler(
-        httpStatusCodes.INTERNAL_SERVER, user.error,
-      ),
+      new ErrorHandler(httpStatusCodes.INTERNAL_SERVER, user.error,),
     );
   }
 
@@ -197,7 +136,7 @@ export async function update({
 export async function updatePassword({
   req, res, next, ErrorHandler,
   httpStatusCodes, responseHandler,
-  usersService,
+  crudHandler,
 }) {
   const {
     oldPassword,
@@ -207,33 +146,29 @@ export async function updatePassword({
   if (oldPassword === password) {
     return next(
       new ErrorHandler(
-        httpStatusCodes.BAD_REQUEST, "You've used that password before. Please choose a different one.",
+        httpStatusCodes.BAD_REQUEST,
+        "You've used that password before. Please choose a different one."
       ),
     );
   }
 
-  const user = await usersService.getOne({ _id: req.user._id }, '', 'password');
+  const user = await crudHandler.getOne({ filters: { id: req.user._id }, select: 'password' });
+
   if (!user) {
     return next(
-      new ErrorHandler(
-        httpStatusCodes.INTERNAL_SERVER, 'User not exist',
-      ),
+      new ErrorHandler(httpStatusCodes.INTERNAL_SERVER, 'User not exist',),
     );
   }
 
   return user.comparePassword(oldPassword, async (err, isMatch) => {
     if (err) {
       return next(
-        new ErrorHandler(
-          httpStatusCodes.INTERNAL_SERVER, 'Can not update password',
-        ),
+        new ErrorHandler(httpStatusCodes.INTERNAL_SERVER, 'Can not update password',),
       );
     }
     if (!isMatch) {
       return next(
-        new ErrorHandler(
-          httpStatusCodes.BAD_REQUEST, 'The current password you have provided is incorrect',
-        ),
+        new ErrorHandler(httpStatusCodes.BAD_REQUEST, 'The current password you have provided is incorrect',),
       );
     }
 
@@ -243,9 +178,7 @@ export async function updatePassword({
 
     if (!newUser || newUser.error) {
       return next(
-        new ErrorHandler(
-          httpStatusCodes.INTERNAL_SERVER, user.error,
-        ),
+        new ErrorHandler(httpStatusCodes.INTERNAL_SERVER, user.error,),
       );
     }
     return res.status(httpStatusCodes.OK).json(

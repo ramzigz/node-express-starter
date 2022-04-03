@@ -22,17 +22,23 @@ const crudHandler = {
     limit = null,
     sort = '',
     select = '',
+    distinct = null,
   }) {
     try {
       if (!model || model === '') return { error: 'No model provided' };
 
-      const list = await models[model].find({ ...filters })
-        .populate(populate)
-        .skip(offset)
-        .limit(limit)
-        .sort(sort)
-        .select(select)
-        .exec();
+      const list = !distinct
+        ? await models[model].find({ ...filters })
+          .populate(populate)
+          .skip(offset)
+          .limit(limit)
+          .sort(sort)
+          .select(select)
+          .exec()
+        : await models[model]
+          .find({ ...filters })
+          .distinct(distinct);
+
       const counts = await models[model].countDocuments({ ...filters });
       return { data: { list, counts } };
     } catch (err) {
@@ -76,17 +82,19 @@ const crudHandler = {
     }
   },
 
-  async update({ model, id, populate = '', select = '' }) {
+  async update({ model, id, populate = '', data = {}, select = '' }) {
     try {
       const response = await crudHandler.getById({ model, id });
-      if (!response || response.error) return { error: 'Resource not exist' };
-      const data = {};
 
-      const saving = await models[model].updateOne({ id }, { $set: data });
+      if (!response || response.error) return { error: 'Resource not exist' };
+
+      const saving = await models[model].updateOne({ _id: id }, { $set: data });
 
       if (saving && !saving.error) {
-        return await crudHandler.getById({ model, id, populate, select });
+        const responseUser = await crudHandler.getById({ model, id, populate, select });
+        return responseUser;
       }
+
       return { error: saving.error || 'Error updating' };
     } catch (err) {
       return { error: err };

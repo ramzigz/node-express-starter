@@ -4,13 +4,12 @@ import jwt from 'jsonwebtoken';
 import moment from 'moment';
 import { ErrorHandler } from '../utils/errorsHandler.js';
 import httpStatusCodes from '../utils/httpStatusCodes.js';
-import usersService from '../services/users.services.js';
+import crudHandler from '../services/crudHandler.js';
 
 const authMiddleware = {
   /**
    * Login Required middleware.
    */
-
   checkToken(tokens, accessToken) {
     try {
       let check = false;
@@ -38,7 +37,12 @@ const authMiddleware = {
           tokens.push(item);
         }
       }
-      usersService.update(user._id, { tokens }, '-tokens -password');
+      crudHandler.update({
+        model: 'User',
+        id: user._id,
+        data: { tokens },
+        select: '-tokens -password',
+      });
 
       return tokens;
     } catch (error) {
@@ -50,9 +54,7 @@ const authMiddleware = {
     try {
       if (!req.headers.authorization || req.headers.authorization === '') {
         return next(
-          new ErrorHandler(
-            httpStatusCodes.UNAUTHORIZED, 'NO AUTH TOKEN',
-          ),
+          new ErrorHandler(httpStatusCodes.UNAUTHORIZED, 'NO AUTH TOKEN',),
         );
       }
       const authorizationHeader = req.headers.authorization.split(' ')[1]; // Bearer <token>
@@ -66,7 +68,7 @@ const authMiddleware = {
         ));
       }
 
-      const response = await usersService.getOne({ _id: user._id });
+      const response = await crudHandler.getById({ model: 'User', id: user._id });
 
       if (response) {
         if (response.isActive && authMiddleware.checkToken(response.tokens, authorizationHeader)) {
@@ -82,15 +84,11 @@ const authMiddleware = {
       }
 
       return next(
-        new ErrorHandler(
-          httpStatusCodes.FORBIDDEN, 'NOT ALLOWED',
-        ),
+        new ErrorHandler(httpStatusCodes.FORBIDDEN, 'NOT ALLOWED',),
       );
     } catch (error) {
       return next(
-        new ErrorHandler(
-          httpStatusCodes.INTERNAL_SERVER, error,
-        ),
+        new ErrorHandler(httpStatusCodes.INTERNAL_SERVER, error,),
       );
     }
   },
@@ -119,7 +117,7 @@ const authMiddleware = {
       }
 
       // Check if user is an admin
-      const response = await usersService.getOne({ _id: user._id, role: 'ADMIN' });
+      const response = await crudHandler.getOne({ model: 'User', filters: { id: user._id, role: 'ADMIN' } });
 
       if (response && authMiddleware.checkToken(response.tokens, authorizationHeader)) {
         if (user.role === response.role) {
@@ -127,18 +125,12 @@ const authMiddleware = {
           return next();
         }
         return next(
-          new ErrorHandler(
-            httpStatusCodes.FORBIDDEN, 'ONLY ADMIN IS ALLOWED',
-          ),
+          new ErrorHandler(httpStatusCodes.FORBIDDEN, 'ONLY ADMIN IS ALLOWED',),
         );
       }
-      return next(new ErrorHandler(
-        httpStatusCodes.FORBIDDEN, 'ONLY ADMIN IS ALLOWED',
-      ));
+      return next(new ErrorHandler(httpStatusCodes.FORBIDDEN, 'ONLY ADMIN IS ALLOWED',));
     } catch (error) {
-      return next(new ErrorHandler(
-        httpStatusCodes.INTERNAL_SERVER, error,
-      ));
+      return next(new ErrorHandler(httpStatusCodes.INTERNAL_SERVER, error,));
     }
   },
   /**
@@ -159,7 +151,7 @@ const authMiddleware = {
         return next();
       }
 
-      const response = await usersService.getById(user._id);
+      const response = await crudHandler.getById({ id: user._id });
 
       if (response) {
         req.user = response;
@@ -171,9 +163,7 @@ const authMiddleware = {
     } catch (error) {
       console.log('check auth error', error);
       return next(
-        new ErrorHandler(
-          httpStatusCodes.INTERNAL_SERVER, error,
-        ),
+        new ErrorHandler(httpStatusCodes.INTERNAL_SERVER, error,),
       );
     }
   },

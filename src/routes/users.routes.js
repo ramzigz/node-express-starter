@@ -28,16 +28,11 @@ const storage = multer.diskStorage({
 const uploadMany = multer({ storage, fileFilter: imageFilter, limits });
 const routes = express.Router();
 
-routes.route('/profile')
+routes.route('/me')
   .patch(
     authMiddleware.isAuthenticated,
     uploadMany.fields([
       { name: 'picture', maxCount: 1 },
-      { name: 'kbis', maxCount: 1 },
-      { name: 'identitySide1', maxCount: 1 },
-      { name: 'identitySide2', maxCount: 1 },
-      { name: 'drivingLicenceSide1', maxCount: 1 },
-      { name: 'drivingLicenceSide2', maxCount: 1 },
     ]),
     validate(usersValidation.updateUser, { keyByField: true }, { abortEarly: false }),
     userController.updateUser,
@@ -46,8 +41,6 @@ routes.route('/profile')
 
 routes.get('/:offset/:limit', authMiddleware.isAuthorized, userController.getAll);
 routes.get('/', authMiddleware.isAuthorized, userController.getAll);
-
-routes.get('/stats', authMiddleware.isAuthorized, userController.getUsersStats);
 
 routes.route('/password')
   .patch(
@@ -62,11 +55,6 @@ routes.route('/:id')
     authMiddleware.isAuthorized,
     uploadMany.fields([
       { name: 'picture', maxCount: 1 },
-      { name: 'kbis', maxCount: 1 },
-      { name: 'identitySide1', maxCount: 1 },
-      { name: 'identitySide2', maxCount: 1 },
-      { name: 'drivingLicenceSide1', maxCount: 1 },
-      { name: 'drivingLicenceSide2', maxCount: 1 },
     ]),
     validate(
       usersValidation.updateUserAsAdmin,

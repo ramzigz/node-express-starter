@@ -3,13 +3,12 @@ import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import util from 'util';
 import httpStatusCodes from '../../utils/httpStatusCodes.js';
-import * as login from './login.controller.js';
+import login from './login.controller.js';
 import logout from './logout.controller.js';
 import * as reserPasswordController from './reset-password.controller.js';
 import { ErrorHandler } from '../../utils/errorsHandler.js';
 import responseHandler from '../../utils/responseHandler.js';
 import signupUser from './signup.controller.js';
-import addressService from '../../services/address.services.js';
 import * as emailVerificationController from './email-verification.controller.js';
 import generateCode from '../../utils/codeGenerator.js';
 import sendMail from '../../utils/sendEmail.js';
@@ -20,7 +19,7 @@ const randomBytesAsync = util.promisify(crypto.randomBytes);
 
 const signin = (req, res, next) => {
   const secret = process.env.TOKEN_SECRET;
-  login.login({
+  login({
     req,
     res,
     next,
@@ -43,7 +42,6 @@ const signup = (req, res, next) => {
     httpStatusCodes,
     responseHandler,
     crudHandler,
-    addressService,
     jwt,
     secret,
   });

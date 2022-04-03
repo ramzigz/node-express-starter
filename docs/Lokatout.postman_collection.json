@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "78dd3833-d0f9-43fe-957f-99339de2e80e",
-		"name": "react-native-starter",
+		"name": "node-express-starter",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [

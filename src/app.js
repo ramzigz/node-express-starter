@@ -73,7 +73,7 @@ mongoose.connection.on('error', () => {
 /**
   * Express configuration.
   */
-app.set('port', process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 3000);
+app.set('port', process.env.PORT || 5000);
 app.use(compression());
 
 app.use(logger('dev', {
@@ -129,17 +129,10 @@ initPassportport();
 app.use('/users', appRoutes.usersRoutes);
 app.use('/', appRoutes.authRoutes);
 
-// Used to show last commit date
-let lastBuildDate = null;
-exec("stat -c '%y' ./package.json", (error, stdout, stderr) => {
-  lastBuildDate = stdout;
-});
-
 app.get('/', (req, res, next) => {
   res.status(200).json({
-    msg: 'react-native-starter API',
+    msg: 'node-express-starter API',
     port: process.env.PORT || 5000,
-    lastBuildDate,
   });
 });
 /**

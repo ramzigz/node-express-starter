@@ -2,7 +2,7 @@
 export default async function logout({
   req, res, httpStatusCodes, responseHandler, crudHandler,
 }) {
-  const user = await crudHandler.getOne({ model: 'User', id: req.user._id });
+  const user = await crudHandler.getById({ model: 'User', id: req.user._id });
 
   for (let index = 0; index < user.tokens.length; index += 1) {
     const tokenItem = user.tokens[index];
