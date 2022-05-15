@@ -1,5 +1,5 @@
 NODE_ENV=development
-PORT=5000
+PORT=3000
 APP_NAME=node-express-starter
 MONGODB_URI=mongodb://localhost:27017/test_db
 TOKEN_SECRET=956ae3ba-ed7e-4c3f-b711-27c3783f9845
