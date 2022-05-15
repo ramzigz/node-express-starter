@@ -9,27 +9,23 @@ import express from 'express';
 import compression from 'compression';
 import helmet from 'helmet';
 import logger from 'morgan';
-import dotenv from 'dotenv';
 import flash from 'express-flash';
 import path from 'path';
-import mongoose from 'mongoose';
 import passport from 'passport';
 import fs from 'fs';
 import log4js from 'log4js';
 import cors from 'cors';
 import session from 'express-session';
-import { exec } from 'child_process';
-import chalk from 'chalk';
+import dotenv from 'dotenv';
 import MongoStore from 'connect-mongo';
 import { fileURLToPath } from 'url';
 import log4j from './config/configLog4js.js';
-import { handleError } from './utils/errorsHandler.js';
 import initPassportport from './config/passport.js';
 
 /**
   * Routes
   */
-import appRoutes from './routes/index.js';
+import appRoutes from './v1/routes/index.js';
 import createAdmin from './helpers/createAdmin.js';
 
 /**
@@ -43,37 +39,11 @@ const __dirname = path.dirname(__filename);
   * Create Express server.
   */
 const app = express();
-
 app.use(cors({ origin: true, credentials: true }));
-
-/**
-  * Connect to MongoDB.
-  */
-
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => log4j.loggerinfo.info(
-    '%s Database connected!',
-    chalk.green('✓'),
-  ))
-  .catch((err) => log4j.loggerinfo.error(
-    '%s MongoDB connection error.%s',
-    chalk.red('✗'),
-    err
-  ));
-
-mongoose.connection.on('error', () => {
-  log4j.loggerinfo.error(
-    `%s MongoDB connection error.
-   Please make sure MongoDB is running.`,
-    chalk.red('✗')
-  );
-  process.exit();
-});
 
 /**
   * Express configuration.
   */
-app.set('port', process.env.PORT || 5000);
 app.use(compression());
 
 app.use(logger('dev', {
@@ -84,6 +54,7 @@ app.use(express.json());
 app.use(express.urlencoded({
   extended: true,
 }));
+
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
@@ -93,6 +64,7 @@ app.use(session({
     mongoUrl: process.env.MONGODB_URI,
   }),
 }));
+
 app.use(log4js.connectLogger(log4j.loggercheese, { level: 'info' }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -126,36 +98,14 @@ initPassportport();
 /**
   * App routes.
   */
-app.use('/users', appRoutes.usersRoutes);
-app.use('/', appRoutes.authRoutes);
+
+app.use('/api/v1', appRoutes);
 
 app.get('/', (req, res, next) => {
   res.status(200).json({
     msg: 'node-express-starter API',
-    port: process.env.PORT || 5000,
+    port: process.env.PORT || 3000,
   });
-});
-/**
-  * Error Handler.
-  */
-
-app.use((err, req, res, next) => {
-  console.log('er========+>', err, next);
-  handleError(err, res);
-});
-
-/**
-  * Start Express server.
-  */
-
-app.listen(app.get('port'), () => {
-  log4j.loggerinfo.info(
-    '%s App is running at http://localhost:%d in %s mode',
-    chalk.green('✓'),
-    app.get('port'),
-    app.get('env'),
-  );
-  log4j.loggerinfo.info('  Press CTRL-C to stop\n');
 });
 
 export default app;

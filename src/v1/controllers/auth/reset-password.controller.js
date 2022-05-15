@@ -1,4 +1,4 @@
-import sendMail from '../../utils/sendEmail.js';
+import sendMail from '../../../utils/sendEmail.js';
 
 export function forgotPassword({
   req, res, next, crudHandler,

@@ -3,7 +3,7 @@ import passport from 'passport';
 import LocalStrategy from 'passport-local';
 
 import User from '../models/User.js';
-import crudHandler from '../services/crudHandler.js';
+import crudHandler from '../utils/crudHandler.js';
 
 export default function initPassport() {
   passport.serializeUser((user, done) => {

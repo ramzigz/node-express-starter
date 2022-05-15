@@ -1,13 +1,13 @@
-import { ErrorHandler } from '../../utils/errorsHandler.js';
-import httpStatusCodes from '../../utils/httpStatusCodes.js';
-import responseHandler from '../../utils/responseHandler.js';
+import { ErrorHandler } from '../../../utils/errorsHandler.js';
+import httpStatusCodes from '../../../utils/httpStatusCodes.js';
+import responseHandler from '../../../utils/responseHandler.js';
 import get from './get.controller.js';
-import { isAdmin } from '../../helpers/checkAuth.js';
-import createFilters from '../../helpers/createFilters.js';
+import { isAdmin } from '../../../helpers/checkAuth.js';
+import createFilters from '../../../helpers/createFilters.js';
 import { update, updatePassword } from './update.controller.js';
 import deleteUsr from './delete.controller.js';
-import deleteFile from '../../utils/deleteFile.js';
-import crudHandler from '../../services/crudHandler.js';
+import deleteFile from '../../../utils/deleteFile.js';
+import crudHandler from '../../../utils/crudHandler.js';
 
 const getAll = (req, res, next) => {
   get.all({

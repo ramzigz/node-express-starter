@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import moment from 'moment';
 import { ErrorHandler } from '../utils/errorsHandler.js';
 import httpStatusCodes from '../utils/httpStatusCodes.js';
-import crudHandler from '../services/crudHandler.js';
+import crudHandler from '../utils/crudHandler.js';
 
 const authMiddleware = {
   /**
@@ -161,7 +161,6 @@ const authMiddleware = {
       req.user = null;
       return next();
     } catch (error) {
-      console.log('check auth error', error);
       return next(
         new ErrorHandler(httpStatusCodes.INTERNAL_SERVER, error,),
       );

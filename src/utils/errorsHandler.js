@@ -7,7 +7,7 @@ class ErrorHandler extends Error {
     this.name = name;
   }
 }
-const handleError = (err, res) => {
+const handleError = ({ err, res }) => {
   const {
     statusCode, errorCode, message, details, name,
   } = err;

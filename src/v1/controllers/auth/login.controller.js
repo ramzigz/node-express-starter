@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import moment from 'moment';
-import authMiddleware from '../../middlewares/auth.middleware.js';
+import authMiddleware from '../../../middlewares/auth.middleware.js';
 
 /* eslint-disable no-underscore-dangle */
 export default async function login({

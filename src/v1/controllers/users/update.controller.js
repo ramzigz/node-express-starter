@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import deleteFile from '../../utils/deleteFile.js';
+import deleteFile from '../../../utils/deleteFile.js';
 
 async function createFileAndReturnId(
   {

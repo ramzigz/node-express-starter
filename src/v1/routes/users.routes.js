@@ -4,11 +4,11 @@ import fs from 'fs';
 import mime from 'mime';
 import multer from 'multer';
 import * as userController from '../controllers/users/index.js';
-import authMiddleware from '../middlewares/auth.middleware.js';
-import limits from '../utils/fileValidation.js';
+import authMiddleware from '../../middlewares/auth.middleware.js';
+import limits from '../../utils/fileValidation.js';
 import usersValidation from '../validations/users.validation.js';
 
-import * as imageFilter from '../utils/isImage.js';
+import * as imageFilter from '../../utils/isImage.js';
 
 const storage = multer.diskStorage({
   destination(req, file, cb) {
@@ -26,9 +26,9 @@ const storage = multer.diskStorage({
 });
 
 const uploadMany = multer({ storage, fileFilter: imageFilter, limits });
-const routes = express.Router();
+const userRoutes = express.Router();
 
-routes.route('/me')
+userRoutes.route('/me')
   .patch(
     authMiddleware.isAuthenticated,
     uploadMany.fields([
@@ -39,17 +39,17 @@ routes.route('/me')
   )
   .get(authMiddleware.isAuthenticated, userController.getMyProfile);
 
-routes.get('/:offset/:limit', authMiddleware.isAuthorized, userController.getAll);
-routes.get('/', authMiddleware.isAuthorized, userController.getAll);
+userRoutes.get('/:offset/:limit', authMiddleware.isAuthorized, userController.getAll);
+userRoutes.get('/', authMiddleware.isAuthorized, userController.getAll);
 
-routes.route('/password')
+userRoutes.route('/password')
   .patch(
     authMiddleware.isAuthenticated,
     validate(usersValidation.updatePassword, { keyByField: true }, { abortEarly: false }),
     userController.updateUserPassword,
   );
 
-routes.route('/:id')
+userRoutes.route('/:id')
   .get(authMiddleware.isAuthorized, userController.getOne)
   .patch(
     authMiddleware.isAuthorized,
@@ -64,4 +64,4 @@ routes.route('/:id')
     userController.updateUser,
   )
   .delete(authMiddleware.isAuthorized, userController.deleteUser);
-export default routes;
+export default userRoutes;
