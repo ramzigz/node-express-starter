@@ -19,6 +19,7 @@ import session from 'express-session';
 import dotenv from 'dotenv';
 import MongoStore from 'connect-mongo';
 import { fileURLToPath } from 'url';
+import bodyParser from 'body-parser';
 import log4j from './config/configLog4js.js';
 import initPassportport from './config/passport.js';
 
@@ -45,7 +46,7 @@ app.use(cors({ origin: true, credentials: true }));
   * Express configuration.
   */
 app.use(compression());
-
+app.use(bodyParser.json());
 app.use(logger('dev', {
   stream: fs.createWriteStream('./appLogs.log', { flags: 'a' }),
 }));
